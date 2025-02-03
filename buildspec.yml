@@ -9,13 +9,14 @@ phases:
   build:
     commands:
       - echo Building the backend API...
-      - cd backend/backend-api  
+      - cd backend/backend-api 
       - npm run build  
   post_build:
     commands:
       - echo Deploying the backend API...
       - cd backend/backend-api
-      - aws lambda update-function-code --function-name myLambdaFunction --zip-file fileb://backend/backend-api/myLambdaFunction.zip  # Example for Lambda deployment
+      - aws lambda update-function-code --function-name myLambdaFunction --zip-file fileb://backend/backend-api/myLambdaFunction.zip  # Example Lambda deployment
 artifacts:
   files:
     - backend/backend-api/**/*  
+  base-directory: build
