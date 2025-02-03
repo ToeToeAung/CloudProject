@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing backend dependencies...
+      - cd backend/backend-api  
+      - npm install  
+  build:
+    commands:
+      - echo Building the backend API...
+      - cd backend/backend-api  
+      - npm run build  
+  post_build:
+    commands:
+      - echo Deploying the backend API...
+      - cd backend/backend-api
+      - aws lambda update-function-code --function-name myLambdaFunction --zip-file fileb://backend/backend-api/myLambdaFunction.zip  # Example for Lambda deployment
+artifacts:
+  files:
+    - backend/backend-api/**/*  
