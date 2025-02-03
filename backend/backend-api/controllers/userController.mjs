@@ -25,7 +25,7 @@ export const signUp = async (req, res) => {
     const userId = uuidv4();
 
     let profileImageUrl = "";
-
+    let uploadURL = null;
    
     if (profileImageName && contentType) {
       const uploadParams = {
@@ -35,7 +35,7 @@ export const signUp = async (req, res) => {
       };
 
       const command = new PutObjectCommand(uploadParams);
-      const uploadURL = await getSignedUrl(s3, command, { expiresIn: 300 });
+      uploadURL = await getSignedUrl(s3, command, { expiresIn: 300 });
 
   
       profileImageUrl = `https://${S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/profiles/${userId}/${profileImageName}`;
@@ -53,14 +53,13 @@ export const signUp = async (req, res) => {
   
     res.status(201).json({
       message: "User registered successfully",
-      uploadURL: profileImageUrl ? profileImageUrl : null,
+      uploadURL:  uploadURL || null,
     });
   } catch (error) {
     console.error("Signup Error:", error);
     res.status(500).json({ error: "Error registering user" });
   }
 };
-
 
 
 
@@ -119,6 +118,7 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     let profileImageUrl = "";   
+    let uploadURL = null;
     if (profileImageName !== null && profileImageName !== undefined && contentType !== null && contentType !== undefined) {
     const uploadParams = {
       Bucket: S3_BUCKET_NAME,
@@ -126,7 +126,7 @@ export const updateProfile = async (req, res) => {
       ContentType: contentType,
     };
     const command = new PutObjectCommand(uploadParams);    
-    const uploadURL = await getSignedUrl(s3, command, { expiresIn: 300 });
+     uploadURL = await getSignedUrl(s3, command, { expiresIn: 300 });
     profileImageUrl = `https://${S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/profiles/${user.userId}/${profileImageName}`;
     }
     //profileImageUrl = `https://${S3_BUCKET_NAME}.s3.us-east-1.amazonaws.com/profiles/${user.userId}/${profileImageName}`;
@@ -142,11 +142,11 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({
       message: "Profile updated successfully",
-      uploadURL: profileImageUrl || null,
+      uploadURL: uploadURL || null,
     });
 
   } catch (error) {
-    console.error("Update Profile Error:", error);
-  ///  res.status(500).json({ error: "Error updating profile" });
+   // console.error("Update Profile Error:", error);
+     res.status(500).json({ error: "Error updating profile" });
   }
 };
