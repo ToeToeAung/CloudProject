@@ -18,5 +18,5 @@ phases:
       - aws lambda update-function-code --function-name myLambdaFunction --zip-file fileb://backend/backend-api/myLambdaFunction.zip  # Example Lambda deployment
 artifacts:
   files:
-    - backend/backend-api/**/*  
+    - /**/*  
   base-directory: build
